@@ -41,7 +41,6 @@ class AskActor(channel: Channel, exchangeName:String, responseQueueName: String)
       }
       actorRef match
         case Some(actor: ActorRef) =>
-          log.info(s"При возвращений ответа с идентификатором $correlationId был направлен на актор ${actor.path.name}")
           actor ! response
         case None =>
           log.info(s"При возвращений ответа с идентификатором $correlationId не найдено отправителья")

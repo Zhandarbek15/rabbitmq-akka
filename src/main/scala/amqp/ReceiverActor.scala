@@ -11,7 +11,6 @@ class ReceiverActor(channel: Channel, queueName: String, handle:Message=>Unit) e
                                 properties: AMQP.BasicProperties,
                                 body: Array[Byte]): Unit = {
       val message = new String(body, "UTF-8")
-      log.info(s"${self.path.name} актор получил сообщение: $message. Ключ роутинга: ${envelope.getRoutingKey}")
       handle(Message(message,envelope.getRoutingKey,properties.getReplyTo,properties.getCorrelationId))
     }
   }
@@ -23,10 +22,8 @@ class ReceiverActor(channel: Channel, queueName: String, handle:Message=>Unit) e
   override def receive: Receive = {
     // Начинаем прослушивание очереди
     case "Listen" =>
-      log.info(s"Актор ${self.path.name} начинает прослушивание очереди под названием $queueName")
       consumerTag = channel.basicConsume(queueName, true, consumer)
     case "Unlisted" =>
-      log.info(s"Актор ${self.path.name} останавливает прослушивание очереди под названием $queueName")
       channel.basicCancel(consumerTag)
   }
 }

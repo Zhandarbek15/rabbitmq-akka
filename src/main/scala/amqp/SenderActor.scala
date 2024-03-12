@@ -14,8 +14,6 @@ class SenderActor(channel: Channel, exchangeName:String) extends Actor with Acto
       // Отправляем сообщение в очередь
       channel.basicPublish(exchangeName, routingKey, new AMQP.BasicProperties(), messageBytes)
 
-      log.info(s"Отправлено сообщение: $message")
-
     case RabbitMQ.Answer(routingKey,correlationId,message) =>
       // Преобразуем сообщение в массив байтов
       val messageBytes = message.getBytes("UTF-8")
@@ -26,8 +24,6 @@ class SenderActor(channel: Channel, exchangeName:String) extends Actor with Acto
       
       // Отправляем сообщение в очередь
       channel.basicPublish(exchangeName, routingKey,properties, messageBytes)
-
-      log.info(s"Отправлено ответ с айди $correlationId")
   }
 }
 
